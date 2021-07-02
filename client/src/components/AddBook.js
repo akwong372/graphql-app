@@ -1,7 +1,21 @@
 import { useQuery } from '@apollo/client';
+import { useState } from 'react';
 import { getAuthorsQuery } from '../queries/queries';
 
 function AddBook() {
+
+    const [query, setQuery] = useState({
+        name: '',
+        genre: '',
+        authorId: ''
+    });
+
+    const handleChange = e => {
+        setQuery({
+            ...query,
+            [e.target.name]: e.target.value
+        })
+    };
 
     const { loading, error, data } = useQuery(getAuthorsQuery);
 
@@ -17,17 +31,17 @@ function AddBook() {
         <form>
             <div className="field">
                 <label>Book name: </label>
-                <input type="text"></input>
+                <input type="text" name="name" onChange={handleChange}></input>
             </div>
 
             <div className="field">
                 <label>Genre: </label>
-                <input type="text"></input>
+                <input type="text" name="genre" onChange={handleChange}></input>
             </div>
 
             <div className="field">
                 <label>Author: </label>
-                <select>
+                <select name="authorId" onChange={handleChange}>
                     <option>Select author</option>
                     {displayAuthors()}
                 </select>
