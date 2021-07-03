@@ -25,10 +25,15 @@ function AddBook() {
         return data.authors.map(({ name, id }) => (
             <option key={id} value={id}>{name}</option>
         ));
-    }
+    };
+
+    const submitForm = e => {
+        e.preventDefault();
+        console.log(query)
+    };
 
     return (
-        <form>
+        <form id="add-book" onSubmit={submitForm}>
             <div className="field">
                 <label>Book name: </label>
                 <input type="text" name="name" onChange={handleChange}></input>
