@@ -1,6 +1,6 @@
-import { useQuery } from '@apollo/client';
+import { useQuery, useMutation } from '@apollo/client';
 import { useState } from 'react';
-import { getAuthorsQuery } from '../queries/queries';
+import { getAuthorsQuery, addBookMutation, getBooksQuery } from '../queries/queries';
 
 function AddBook() {
 
@@ -17,19 +17,27 @@ function AddBook() {
         })
     };
 
-    const { loading, error, data } = useQuery(getAuthorsQuery);
+    const { loading: queryLoading, error: queryError, data: queryData } = useQuery(getAuthorsQuery);
+    const [addBook] = useMutation(addBookMutation);
 
     const displayAuthors = () => {
-        if (loading) return <option disabled>Loading...</option>;
-        if (error) return <option diabled>Error loading authors</option>;
-        return data.authors.map(({ name, id }) => (
+        if (queryLoading) return <option disabled>Loading...</option>;
+        if (queryError) return <option diabled>Error loading authors</option>;
+        return queryData.authors.map(({ name, id }) => (
             <option key={id} value={id}>{name}</option>
         ));
     };
 
     const submitForm = e => {
         e.preventDefault();
-        console.log(query)
+        addBook({
+            variables: {
+                name: query.name,
+                genre: query.genre,
+                authorId: query.authorId
+            },
+            refetchQueries: [{ query: getBooksQuery }]
+        });
     };
 
     return (
